@@ -1,6 +1,6 @@
-# Lecture Notes Assistant
+# Missedmylecture
 
-Lecture Notes Assistant is a web application designed to help students catch up on missed lectures. By inputting lecture notes, the system uses large language models (LLMs) to generate LaTeX content from the notes and provides relevant YouTube videos on topics within the notes.
+Missedmylecture is a web application designed to help students catch up on missed lectures. By inputting lecture notes, the system uses large language models (LLMs) to generate LaTeX content from the notes and provides relevant YouTube videos on topics within the notes.
 
 ## Features
 
