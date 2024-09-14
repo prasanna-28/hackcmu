@@ -39,12 +39,9 @@ def youtube_search(query, max_results=1):
             'title': item['snippet']['title'],
             'videoId': item['id']['videoId'],
             'description': item['snippet']['description'],
-            'channelTitle': item['snippet']['channelTitle'],
-            'publishedAt': item['snippet']['publishedAt'],
         }
         details = get_video_details(item['id']['videoId'], api_key)
         video_info['duration'] = details['duration']
-        video_info['embedHtml'] = details['embedHtml']
         results.append(video_info)
     return results
 

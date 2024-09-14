@@ -3,7 +3,6 @@ import os
 import uuid
 import asyncio
 from api.youtube import *
-from api.claude import *
 from api.transcriptions import *
 
 app = Flask(__name__)
@@ -28,13 +27,15 @@ def get_pdf(filename):
 
 
 async def start_processing(file_id):
-    await asyncio.sleep(5)
     file_path = f"{UPLOAD_FOLDER}/{file_id}.pdf"
+    processing_status[file_id] = "Generating Latex"
     latex = notes_to_latex(client, file_path)
     compile_latex(latex)
+    processing_status[file_id] = "Compiling to PDF"
     output_pdf_path = f"{PDF_FOLDER}/{file_id}.pdf"
     encode_pdf(output_pdf_path, 2)
     pdf_link = f"localhost:8888/cdn/pdf/{file_id}.pdf"
+    processing_status[file_id] = "Getting YouTube Videos"
     yt_queries = get_youtube_queries(latex)
     videos = []
     for query in yt_queries:
@@ -56,7 +57,7 @@ async def upload_file():
     file_path = f"{UPLOAD_FOLDER}/{file_id}.pdf"
     file.save(file_path)
 
-    processing_status[file_id] = 'processing'
+    processing_status[file_id] = 'Processing'
     asyncio.create_task(background_process(file_id))
 
     return jsonify({'file_id': file_id}), 200
@@ -75,7 +76,7 @@ async def check_status():
     if processing_status[file_id] == 'done':
         return jsonify({'status': 'done', 'results': processing_results[file_id]}), 200
     else:
-        return jsonify({'status': 'processing'}), 200
+        return jsonify({'status': processing_status[file_id]}), 200
 
 
 if __name__ == '__main__':
