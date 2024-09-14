@@ -43,7 +43,6 @@ async def start_processing(file_id):
     result = {'pdf': pdf_link, 'videos': videos}
     return result
 
-
 @app.route('/upload', methods=['POST'])
 async def upload_file():
     if 'file' not in request.files:
