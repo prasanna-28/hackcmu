@@ -12,7 +12,6 @@ def create_client():
         api_key="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"
     )
 
-
 def concat_images(images) -> Image:
     if len(images) == 1:
         return images[0]
@@ -48,7 +47,6 @@ def encode_image(fp: str) -> str:
         base_64_encoded_data = base64.b64encode(binary_data)
         base64_string = base_64_encoded_data.decode('utf-8')
     return base64_string
-
 
 def notes_to_latex(client: Anthropic, fp: str) -> str:
     file_path = Path(fp)
@@ -88,7 +86,7 @@ def notes_to_latex(client: Anthropic, fp: str) -> str:
     )
     return response.content[0].text
 
-def get_youtube_query(latex_document: str) -> str:
+def get_youtube_queries(latex_document: str) -> str:
     yt_prompt = """Provide three youtube search queries that effectively recaps the content of this latex document.
     Provide each search query separated by newline characters. Do not include any other text in your response.
     Focus on section titles, key terms, and methods.
@@ -116,13 +114,13 @@ def get_youtube_query(latex_document: str) -> str:
         max_tokens=2048,
         messages=message_list
     )
-    return response.content[0].text
+    return list(response.content[0].text.split("\n"))
 
-def compile_latex(latex_document: str):
-    with open("output.tex", "w") as file:
+def compile_latex(latex_document: str, latex_fp: str = "output.tex"):
+    with open(latex_fp, "w") as file:
         file.write(latex_document)
     try:
-        subprocess.run(["pdflatex", "output.tex"], check=True)
+        subprocess.run(["pdflatex", latex_fp], check=True)
         print(f"Successfully compiled tex file")
     except subprocess.CalledProcessError as e:
         print(f"Error compiling tex file: {e}")
