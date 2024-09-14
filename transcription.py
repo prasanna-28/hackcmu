@@ -4,6 +4,7 @@ import pymupdf, fitz
 from pathlib import Path
 from PIL import Image
 from io import BytesIO
+import subprocess
 
 
 def create_client():
@@ -33,7 +34,6 @@ def encode_pdf(source_fp: str, res_scale: int = 1) -> str:
             else:
                 pix = page.get_pixmap()
             images.append(Image.frombytes("RGB", [pix.width, pix.height], pix.samples))
-        images[-1].save("ex_im.png")
 
     image = concat_images(images)
     buffered = BytesIO()
@@ -118,11 +118,21 @@ def get_youtube_query(latex_document: str) -> str:
     )
     return response.content[0].text
 
+def compile_latex(latex_document: str):
+    with open("output.tex", "w") as file:
+        file.write(latex_document)
+    try:
+        subprocess.run(["pdflatex", "output.tex"], check=True)
+        print(f"Successfully compiled tex file")
+    except subprocess.CalledProcessError as e:
+        print(f"Error compiling tex file: {e}")
+
 
 if __name__ == "__main__":
     client = create_client()
-    encode_pdf("test.pdf", 2)
-    # response = notes_to_latex(client, "test_data/Lecture9.6-1 (2).pdf")
+    response = notes_to_latex(client, "test_data/Lecture9.6-1 (2).pdf")
+    compile_latex(response)
+    encode_pdf("output.pdf", 2)
     # # print(response)
     # yt_query = get_youtube_query(response)
     # print(yt_query)
