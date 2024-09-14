@@ -1,6 +1,6 @@
 from anthropic import Anthropic
 import base64
-import pymupdf
+import pymupdf, fitz
 from pathlib import Path
 from PIL import Image
 from io import BytesIO
@@ -23,13 +23,17 @@ def concat_images(images) -> Image:
             cur_height += im.height
         return dst
 
-def encode_pdf(source_fp: str) -> str:
+def encode_pdf(source_fp: str, res_scale: int = 1) -> str:
     images = []
     with pymupdf.open(source_fp) as doc:
         for page in doc:
-            # pymupdf.Matrix(2, 2)
-            pix = page.get_pixmap()
+            if res_scale > 1:
+                mat = fitz.Matrix(res_scale, res_scale)
+                pix = page.get_pixmap(matrix=mat)
+            else:
+                pix = page.get_pixmap()
             images.append(Image.frombytes("RGB", [pix.width, pix.height], pix.samples))
+        images[-1].save("ex_im.png")
 
     image = concat_images(images)
     buffered = BytesIO()
@@ -117,7 +121,8 @@ def get_youtube_query(latex_document: str) -> str:
 
 if __name__ == "__main__":
     client = create_client()
-    response = notes_to_latex(client, "test_data/Lecture9.6-1 (2).pdf")
-    # print(response)
-    yt_query = get_youtube_query(response)
-    print(yt_query)
+    encode_pdf("test.pdf", 2)
+    # response = notes_to_latex(client, "test_data/Lecture9.6-1 (2).pdf")
+    # # print(response)
+    # yt_query = get_youtube_query(response)
+    # print(yt_query)
