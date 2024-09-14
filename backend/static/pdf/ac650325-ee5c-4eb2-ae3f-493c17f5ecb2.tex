@@ -1,0 +1,71 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+
+\section{Set Theory}
+
+\subsection{Basic Definitions}
+
+\begin{align*}
+\mathbb{N} &= \{0, 1, 2, \ldots\} & \text{natural numbers} \\
+\mathbb{Z} &= \{\ldots, -1, 0, 1, \ldots\} & \text{integers} \\
+\mathbb{Q} &= \{\frac{a}{b} \mid a,b \in \mathbb{Z}, b \neq 0\} & \text{rationals} \\
+\mathbb{R} &= \text{real numbers} \\
+\mathbb{C} &= \{a + bi \mid a,b \in \mathbb{R}\} & \text{complex numbers}
+\end{align*}
+
+\textit{Interval notation}: $(a,b) = \{x \in \mathbb{R} \mid a < x < b\}$
+
+\textit{Set-builder notation}: $\{x \mid P(x)\}$ where $P(x)$ is a property of $x$
+
+\subsection{Set Operations}
+
+\begin{align*}
+A \cup B &= \{x \mid x \in A \text{ or } x \in B\} & \text{union} \\
+A \cap B &= \{x \mid x \in A \text{ and } x \in B\} & \text{intersection}
+\end{align*}
+
+\textit{Venn diagrams} are used to visualize set operations.
+
+\begin{align*}
+A \setminus B &= \{x \in A \mid x \notin B\} & \text{set difference} \\
+A \triangle B &= (A \cup B) \setminus (A \cap B) & \text{symmetric difference}
+\end{align*}
+
+\subsection{Properties}
+
+Let $A_\alpha$ be an indexed family of sets (where $\alpha \in I$).
+
+\begin{align*}
+\bigcup_{\alpha \in I} A_\alpha &= \{x \mid x \in A_\alpha \text{ for some } \alpha \in I\} \\
+\bigcap_{\alpha \in I} A_\alpha &= \{x \mid x \in A_\alpha \text{ for every } \alpha \in I\}
+\end{align*}
+
+\textit{De Morgan's Laws}:
+\begin{align*}
+\overline{\bigcup_{\alpha \in I} A_\alpha} &= \bigcap_{\alpha \in I} \overline{A_\alpha} \\
+\overline{\bigcap_{\alpha \in I} A_\alpha} &= \bigcup_{\alpha \in I} \overline{A_\alpha}
+\end{align*}
+
+\subsection{Functions}
+
+A \textit{function} is a mapping or transformation from one set to another.
+
+Let $A, B$ be sets. $A \to B$ denotes a function from $A$ to $B$.
+
+\textit{Injective} (one-to-one): If $f(x_1) = f(x_2)$, then $x_1 = x_2$.
+
+\textit{Surjective} (onto): For every $y \in B$, there exists $x \in A$ such that $f(x) = y$.
+
+\textit{Bijective}: Both injective and surjective.
+
+If $f: A \to B$ is bijective, then there exists an inverse function $f^{-1}: B \to A$.
+
+\subsection{Composition of Functions}
+
+If $f: A \to B$ and $g: B \to C$, then the composition $g \circ f: A \to C$ is defined by $(g \circ f)(x) = g(f(x))$.
+
+\end{document}

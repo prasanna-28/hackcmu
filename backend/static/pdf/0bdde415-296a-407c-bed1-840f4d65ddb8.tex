@@ -1,0 +1,98 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+
+\begin{document}
+
+\section{Inverse Matrices}
+
+An $n \times n$ matrix $A$ is invertible if there is a matrix $A^{-1}$ such that $AA^{-1} = A^{-1}A = I$.
+
+\subsection{Examples}
+\begin{itemize}
+    \item $A = \begin{bmatrix} 2 & 3 \\ 1 & 2 \end{bmatrix}$, $B = \begin{bmatrix} 2 & -3 \\ -1 & 2 \end{bmatrix}$ are inverses
+    \item Since $AB = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$, we can write $B = A^{-1}$
+    \item Not all $n \times n$ matrices have inverses
+    \item $A = \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}$ has no inverse
+    \item $AB = \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix} \neq I$
+\end{itemize}
+
+\subsection{Connection to Linear Transformations}
+$A^{-1}$ is the inverse transformation with respect to $A$ (or $T_A^{-1}$ w.r.t. $T_A$). The inverse of $T$ is a linear transformation whose associated matrix is $A^{-1}$.
+
+\section{2x2 Inverse Formula}
+
+Let $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$, then if $ad-bc \neq 0$:
+
+\[A^{-1} = \frac{1}{ad-bc} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix}\]
+
+This is a special case of a more general formula (involving the determinant and adjugate) which is more complicated to compute.
+
+\subsection{Using Gauss-Jordan to Find the Inverse}
+Suppose $A$ has inverse $A^{-1}$
+Then $AA^{-1} = I$
+So $A[A^{-1}] = [I]$
+
+To find $A^{-1}$, we must solve the system $Ax = e_i$ for each $i$.
+
+Instead of solving $[A][x_1] = [e_1]$, $[A][x_2] = [e_2]$, ..., $[A][x_n] = [e_n]$ individually, we can streamline the process by augmenting $A$ with $I$:
+
+$[A|I]$
+
+If $A$ doesn't have $n$ pivots (one in each row), then $A^{-1}$ does not exist.
+If $A$ has $n$ pivots, then the algorithm produces $[I|A^{-1}]$.
+
+\subsection{Summary}
+\begin{itemize}
+    \item If $A$ doesn't have $n$ pivots, then $A^{-1}$ doesn't exist
+    \item If $A$ has $n$ pivots, then we obtain $A^{-1}$
+\end{itemize}
+
+\section{Example}
+
+Find $A^{-1}$, if it exists:
+
+\[A = \begin{bmatrix} 2 & 4 & -2 \\ 4 & 9 & -3 \\ -2 & -3 & 7 \end{bmatrix}\]
+
+\begin{align*}
+\begin{bmatrix}
+2 & 4 & -2 & | & 1 & 0 & 0 \\
+4 & 9 & -3 & | & 0 & 1 & 0 \\
+-2 & -3 & 7 & | & 0 & 0 & 1
+\end{bmatrix}
+&\xrightarrow{R_2 - 2R_1}
+\begin{bmatrix}
+2 & 4 & -2 & | & 1 & 0 & 0 \\
+0 & 1 & 1 & | & -2 & 1 & 0 \\
+-2 & -3 & 7 & | & 0 & 0 & 1
+\end{bmatrix} \\
+&\xrightarrow{R_3 + R_1}
+\begin{bmatrix}
+2 & 4 & -2 & | & 1 & 0 & 0 \\
+0 & 1 & 1 & | & -2 & 1 & 0 \\
+0 & 1 & 5 & | & 1 & 0 & 1
+\end{bmatrix} \\
+&\xrightarrow{R_3 - R_2}
+\begin{bmatrix}
+2 & 4 & -2 & | & 1 & 0 & 0 \\
+0 & 1 & 1 & | & -2 & 1 & 0 \\
+0 & 0 & 4 & | & 3 & -1 & 1
+\end{bmatrix}
+\end{align*}
+
+Therefore:
+
+\[A^{-1} = \begin{bmatrix} \frac{11}{8} & -\frac{1}{4} & \frac{1}{8} \\ -\frac{5}{8} & \frac{3}{4} & -\frac{1}{8} \\ \frac{3}{4} & -\frac{1}{4} & \frac{1}{4} \end{bmatrix} \quad \text{(Check: $AA^{-1} = I$)}\]
+
+\subsection{Using Inverses to Solve Systems}
+If $A$ exists, we can solve $Ax = b$ by multiplying both sides by $A^{-1}$:
+
+\begin{align*}
+A^{-1}Ax &= A^{-1}b \\
+Ix &= A^{-1}b \\
+x &= A^{-1}b
+\end{align*}
+
+Note: $A^{-1}b$ has solution $x$ if $b$ (and $A$) have no pivots. However, even if $A$ has $n$ pivots (is invertible), this solution is unique.
+
+\end{document}

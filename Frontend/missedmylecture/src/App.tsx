@@ -8,14 +8,14 @@ interface VideoData {
   id: string;
   title: string;
   description: string;
-  duration: number;
+  duration: string;
 }
 
 function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [currentScreen, setCurrentScreen] = useState<ScreenType>("upload");
   const [videos, setVideos] = useState<VideoData[]>([]);
-  const [pngUrl, setPngUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [fileId, setFileId] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("");
 
@@ -58,7 +58,7 @@ function App() {
           if (data.status === "processing") {
             setStatus(data.status);
           } else if (data.status === "done") {
-            setPngUrl(data.results.pdf);
+            setImageUrl(data.results.pdf); // Assuming data.results.pdf is actually a PNG URL
             setVideos(
               data.results.videos.map((video: any) => ({
                 id: video.videoId,
@@ -147,7 +147,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 flex flex-col p-4">
       <div className="flex flex-col md:flex-row gap-4">
         <div className="md:w-1/2">
-          <h2 className="text-2xl font-semibold mb-2">Helpful Videos</h2>
+          <h2 className="text-2xl font-semibold mb-2">Related Videos</h2>
           <div className="space-y-4">
             {videos.map((video) => (
               <div key={video.id} className="w-full max-w-2xl mb-8">
@@ -163,8 +163,7 @@ function App() {
                 />
 
                 <p className="text-sm text-gray-500">
-                  Duration: {Math.floor(video.duration / 60000)}m{" "}
-                  {Math.floor((video.duration % 60000) / 1000)}s
+                  Duration: {video.duration.slice(2)}
                 </p>
               </div>
             ))}
@@ -172,9 +171,9 @@ function App() {
         </div>
         <div className="md:w-1/2">
           <h2 className="text-2xl font-semibold mb-2">Lecture Notes</h2>
-          {pngUrl && (
+          {imageUrl && (
             <div className="overflow-auto max-h-screen">
-              <img src={pngUrl} alt="Generated content" className="w-full" />
+              <img src={imageUrl} alt="Generated content" className="w-full" />
             </div>
           )}
         </div>

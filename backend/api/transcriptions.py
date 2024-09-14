@@ -24,7 +24,7 @@ def concat_images(images) -> Image:
             cur_height += im.height
         return dst
 
-def encode_pdf(source_fp: str, res_scale: int = 1) -> str:
+def encode_pdf(source_fp: str, res_scale: int = 1, filepath: str = "") -> str:
     images = []
     with pymupdf.open(source_fp) as doc:
         for page in doc:
@@ -36,11 +36,14 @@ def encode_pdf(source_fp: str, res_scale: int = 1) -> str:
             images.append(Image.frombytes("RGB", [pix.width, pix.height], pix.samples))
 
     image = concat_images(images)
-    buffered = BytesIO()
-    image.save(buffered, format="JPEG")
-    img_str = base64.b64encode(buffered.getvalue())
-    img_str = img_str.decode('utf-8')
-    return img_str
+    if filepath:
+        image.save(filepath, format="PNG")
+    else:
+        buffered = BytesIO()
+        image.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue())
+        img_str = img_str.decode('utf-8')
+        return img_str
 
 def encode_image(fp: str) -> str:
     with open(fp, "rb") as image_file:
@@ -87,7 +90,7 @@ def notes_to_latex(client: Anthropic, fp: str) -> str:
     )
     return response.content[0].text
 
-def get_youtube_queries(latex_document: str) -> str:
+def get_youtube_queries(client, latex_document: str) -> str:
     yt_prompt = """Provide three youtube search queries that effectively recaps the content of this latex document.
     Provide each search query separated by newline characters. Do not include any other text in your response.
     Focus on section titles, key terms, and methods.
@@ -117,11 +120,11 @@ def get_youtube_queries(latex_document: str) -> str:
     )
     return list(response.content[0].text.split("\n"))
 
-def compile_latex(latex_document: str, latex_fp: str = "../static/pdf/output.tex"):
+def compile_latex(latex_document: str, latex_fp: str):
     with open(latex_fp, "w") as file:
         file.write(latex_document)
     try:
-        subprocess.run(["pdflatex", latex_fp], check=True)
+        subprocess.run(["pdflatex", "-output-directory=static/pdf", latex_fp], check=True)
         print(f"Successfully compiled tex file")
     except subprocess.CalledProcessError as e:
         print(f"Error compiling tex file: {e}")

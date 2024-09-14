@@ -1,0 +1,96 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+
+\geometry{
+    top=2cm,
+    bottom=2cm,
+    left=2cm,
+    right=2cm
+}
+
+\begin{document}
+
+\section{Matrix Inverses}
+
+An \textit{inverse} of a matrix $A$ is a matrix that $AA^{-1} = A^{-1}A = I$.
+
+\subsection{Examples}
+
+\begin{itemize}
+    \item $A = \begin{bmatrix} 2 & 1 \\ 1 & 3 \end{bmatrix}$, $B = \begin{bmatrix} 3 & -1 \\ -1 & 2 \end{bmatrix}$ are inverses
+    \item Since $AB = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$, we can write $B = A^{-1}$
+    \item Not all matrices have inverses: $A = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$ has no inverse
+\end{itemize}
+
+\subsection{Connection to Linear Transformations}
+
+If $T$ is a linear transformation with standard matrix $A$ (so $T(x) = A\vec{x}$), then the inverse transformation exists if and only if $A^{-1}$ exists.
+
+\section{2x2 Inverse Formula}
+
+Let $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$. Then if $ad-bc \neq 0$:
+
+\[A^{-1} = \frac{1}{ad-bc} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix}\]
+
+This is a special case of a more general formula (involving the determinant and adjugate) that works for any size matrix.
+
+\subsection{Using Gauss-Jordan to Find the Inverse}
+
+Suppose $A$ has inverse $A^{-1}$. Then:
+\[AA^{-1} = I\]
+\[A[A^{-1}] = [I]\]
+
+So to find $A^{-1}$, we need to solve the system $Ax = e_i$ for each standard basis vector $e_i$.
+
+Instead of solving $[A|e_1], [A|e_2], \ldots, [A|e_n]$ individually, we can streamline the process by solving $[A|I]$ in one go.
+
+\subsection{Invertibility Conditions}
+
+If $A$ is $n \times n$, then the following are equivalent:
+\begin{itemize}
+    \item $A$ has an inverse
+    \item $Ax = 0$ has only the trivial solution
+    \item The RREF of $A$ is $I$
+    \item $A$ has $n$ pivots
+    \item $\det A \neq 0$
+\end{itemize}
+
+\section{Example: Finding $A^{-1}$}
+
+Let $A = \begin{bmatrix} 2 & 1 & 0 \\ 1 & 2 & 1 \\ 0 & 1 & 2 \end{bmatrix}$. Find $A^{-1}$, if it exists.
+
+\begin{align*}
+    [A|I] &= \begin{bmatrix}
+    2 & 1 & 0 & | & 1 & 0 & 0 \\
+    1 & 2 & 1 & | & 0 & 1 & 0 \\
+    0 & 1 & 2 & | & 0 & 0 & 1
+    \end{bmatrix} \\
+    &\sim \begin{bmatrix}
+    1 & 0 & 0 & | & \frac{3}{4} & -\frac{1}{4} & -\frac{1}{8} \\
+    0 & 1 & 0 & | & -\frac{1}{2} & \frac{1}{2} & -\frac{1}{4} \\
+    0 & 0 & 1 & | & \frac{1}{8} & -\frac{1}{4} & \frac{5}{8}
+    \end{bmatrix}
+\end{align*}
+
+Therefore, 
+\[A^{-1} = \begin{bmatrix}
+\frac{3}{4} & -\frac{1}{4} & -\frac{1}{8} \\
+-\frac{1}{2} & \frac{1}{2} & -\frac{1}{4} \\
+\frac{1}{8} & -\frac{1}{4} & \frac{5}{8}
+\end{bmatrix}\]
+
+\subsection{Using Inverses to Solve Systems}
+
+If $A$ is invertible, we can solve $Ax = b$ by multiplying both sides by $A^{-1}$:
+
+\begin{align*}
+    A^{-1}Ax &= A^{-1}b \\
+    Ix &= A^{-1}b \\
+    x &= A^{-1}b
+\end{align*}
+
+However, this is not an efficient method for solving systems in practice.
+
+\end{document}
