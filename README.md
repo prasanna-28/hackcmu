@@ -1,6 +1,6 @@
 # Missedmylecture
 
-Missedmylecture is a web application designed to help students catch up on missed lectures. By inputting lecture notes, the system uses large language models (LLMs) to generate LaTeX content from the notes and provides relevant YouTube videos on topics within the notes.
+[Missedmylecture](https://docs.google.com/presentation/d/1HsuGm3ur9vDcoytv-784MTuj79uT460Ce_WaBvnm5Tc/edit?usp=sharing) is a web application designed to help students catch up on missed lectures. By inputting lecture notes, the system uses large language models (LLMs) to generate LaTeX content from the notes and provides relevant YouTube videos on topics within the notes.
 
 ## Features
 
