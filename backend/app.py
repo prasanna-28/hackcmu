@@ -29,12 +29,15 @@ def get_pdf(filename):
 async def start_processing(file_id):
     file_path = f"{UPLOAD_FOLDER}/{file_id}.pdf"
     processing_status[file_id] = "Generating Latex"
+    print("generating latex for " + file_id)
     latex = notes_to_latex(client, file_path)
     compile_latex(latex)
+    print("compiling to pdf for " + file_id)
     processing_status[file_id] = "Compiling to PDF"
     output_pdf_path = f"{PDF_FOLDER}/{file_id}.pdf"
     encode_pdf(output_pdf_path, 2)
     pdf_link = f"localhost:8888/cdn/pdf/{file_id}.pdf"
+    print("getting youtube videos for " + file_id)
     processing_status[file_id] = "Getting YouTube Videos"
     yt_queries = get_youtube_queries(latex)
     videos = []
