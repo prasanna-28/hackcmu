@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { FileText, Loader } from "lucide-react";
+import { FileText, Loader, Upload } from "lucide-react";
 
 type ScreenType = "upload" | "loading" | "result";
 
@@ -94,33 +94,37 @@ function App() {
   });
 
   const renderUploadScreen = () => (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-4xl md:text-6xl font-bold text-center mb-8 text-gray-800">
-        I missed my lecture...😔
-      </h1>
-      <p className="text-xl text-center mb-8 text-gray-600">
-        Upload or drag and drop any lecture notes to get tailored tutorials to
-        your lecture.
-      </p>
-
-      <div
-        {...getRootProps()}
-        className={`w-full max-w-2xl p-8 border-4 border-dashed rounded-lg text-center cursor-pointer transition-colors ${
-          isDragActive
-            ? "border-blue-500 bg-blue-50"
-            : "border-gray-300 bg-white"
-        }`}
-      >
-        <input {...getInputProps()} />
-        <FileText className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-        <p className="text-xl font-semibold mb-2">
-          {isDragActive
-            ? "Drop the files here..."
-            : "Upload or drag & drop files here"}
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex flex-col items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-2xl p-8 max-w-3xl w-full">
+        <h1 className="text-4xl md:text-6xl font-bold text-center mb-8 text-gray-800 leading-tight">
+          I missed my lecture...😔
+        </h1>
+        <p className="text-xl text-center mb-4 text-gray-600">Now what?</p>
+        <p className="text-xl text-center mb-8 text-gray-600">
+          Upload or drag and drop any lecture notes to get tailored tutorials
+          for your lecture.
         </p>
-        <p className="text-gray-500">Accepted file types: PDF, PNG, JPG</p>
+
+        <div
+          {...getRootProps()}
+          className={`w-full p-8 border-4 border-dashed rounded-lg text-center cursor-pointer transition-all duration-300 ${
+            isDragActive
+              ? "border-blue-500 bg-blue-50 scale-105"
+              : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+          }`}
+        >
+          <input {...getInputProps()} />
+          <Upload className="mx-auto h-16 w-16 text-blue-500 mb-4" />
+          <p className="text-xl font-semibold mb-2">
+            {isDragActive
+              ? "Drop the files here..."
+              : "Upload or drag & drop files here"}
+          </p>
+          <p className="text-gray-500">Accepted file types: PDF, PNG, JPG</p>
+        </div>
+
         {files.length > 0 && (
-          <div className="mt-4">
+          <div className="mt-6 bg-gray-100 rounded-lg p-4">
             <h2 className="text-lg font-semibold mb-2">Uploaded files:</h2>
             <ul className="list-disc list-inside">
               {files.map((file) => (
