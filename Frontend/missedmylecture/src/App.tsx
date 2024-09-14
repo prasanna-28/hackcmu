@@ -19,9 +19,25 @@ function App() {
   const [fileId, setFileId] = useState<string | null>(null);
   const [status, setStatus] = useState<string>("");
 
+  // New state variables for display status messages
+  const [displayStatus, setDisplayStatus] = useState<string>("");
+  const [statusIndex, setStatusIndex] = useState<number>(0);
+
+  const statusMessages = [
+    "Analyzing your notes...",
+    "Fetching related videos...",
+    "Generating insights...",
+    "Processing data...",
+    "Compiling resources...",
+    "Almost done...",
+    "Finalizing results...",
+  ];
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     setFiles(acceptedFiles);
     setCurrentScreen("loading");
+    setStatusIndex(0);
+    setDisplayStatus(statusMessages[0]);
 
     const formData = new FormData();
     formData.append("file", acceptedFiles[0]);
@@ -45,6 +61,31 @@ function App() {
   }, []);
 
   useEffect(() => {
+    let statusIntervalId: NodeJS.Timeout;
+
+    const updateStatusMessage = () => {
+      setStatusIndex((prevIndex) => {
+        const newIndex = prevIndex + 1;
+        if (newIndex < statusMessages.length) {
+          setDisplayStatus(statusMessages[newIndex]);
+          return newIndex;
+        } else {
+          // Stay on the last message
+          return prevIndex;
+        }
+      });
+    };
+
+    if (currentScreen === "loading") {
+      statusIntervalId = setInterval(updateStatusMessage, 5000);
+    }
+
+    return () => {
+      clearInterval(statusIntervalId);
+    };
+  }, [currentScreen]);
+
+  useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
     const checkStatus = async () => {
@@ -58,7 +99,7 @@ function App() {
           if (data.status === "processing") {
             setStatus(data.status);
           } else if (data.status === "done") {
-            setImageUrl(data.results.pdf); // Assuming data.results.pdf is actually a PNG URL
+            setImageUrl(data.results.pdf);
             setVideos(
               data.results.videos.map((video: any) => ({
                 id: video.videoId,
@@ -68,6 +109,12 @@ function App() {
               }))
             );
             setCurrentScreen("result");
+
+            if (statusIndex < statusMessages.length - 1) {
+              setStatusIndex(statusMessages.length - 1);
+              setDisplayStatus(statusMessages[statusMessages.length - 1]);
+            }
+
             clearInterval(intervalId);
           }
         } catch (error) {
@@ -81,8 +128,10 @@ function App() {
       intervalId = setInterval(checkStatus, 1000);
     }
 
-    return () => clearInterval(intervalId);
-  }, [currentScreen, fileId]);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [currentScreen, fileId, statusIndex]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -143,7 +192,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
       <Loader className="h-16 w-16 text-blue-500 animate-spin mb-4" />
       <p className="text-xl font-semibold">Processing your file...</p>
-      <p className="text-lg text-gray-600 mt-2">Status: {status}</p>
+      <p className="text-lg text-gray-600 mt-2">{displayStatus}</p>
     </div>
   );
 
