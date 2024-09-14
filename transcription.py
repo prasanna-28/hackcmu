@@ -46,7 +46,7 @@ def encode_image(fp: str) -> str:
     return base64_string
 
 
-def get_response(client: Anthropic, fp: str) -> str:
+def notes_to_latex(client: Anthropic, fp: str) -> str:
     file_path = Path(fp)
     ftype = file_path.suffix
 
@@ -60,6 +60,7 @@ def get_response(client: Anthropic, fp: str) -> str:
     LATEX_PROMPT = """
     Convert these lecture notes to latex.
     Add headers and sections, so that the notes are easy to read.
+    Center important equations and italicize key terms.
     Don't indent the first line of each paragraph.
     Reduce margins.
     Return just the latex code, nothing else.
@@ -83,8 +84,40 @@ def get_response(client: Anthropic, fp: str) -> str:
     )
     return response.content[0].text
 
+def get_youtube_query(latex_document: str) -> str:
+    yt_prompt = """Provide three youtube search queries that effectively recaps the content of this latex document.
+    Provide each search query separated by newline characters. Do not include any other text in your response.
+    Focus on section titles, key terms, and methods.
+    Stick to one topic per youtube query.
+
+    Some examples of good queries are: 
+    - "completing the square to solve quadratic equations"
+    - "how to choose the right cost function for neural networks"
+    - "properties of alkaline metals"
+    """
+
+    message_list = [
+        {
+            "role": 'user',
+            "content": [
+                {"type": "text", "text": latex_document},
+                {"type": "text", "text": yt_prompt}
+            ]
+        }
+    ]
+
+    MODEL_NAME = "claude-3-5-sonnet-20240620"
+    response = client.messages.create(
+        model=MODEL_NAME,
+        max_tokens=2048,
+        messages=message_list
+    )
+    return response.content[0].text
+
 
 if __name__ == "__main__":
     client = create_client()
-    response = get_response(client, "test_data/Lecture9.6-1 (2).pdf")
-    print(response)
+    response = notes_to_latex(client, "test_data/Lecture9.6-1 (2).pdf")
+    # print(response)
+    yt_query = get_youtube_query(response)
+    print(yt_query)
